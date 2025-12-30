@@ -408,7 +408,3 @@ Review Insight demuestra una **arquitectura moderna y resiliente** que combina l
 Este sistema está listo para producción y puede escalar desde startups hasta grandes cadenas hoteleras, adaptándose a diferentes volúmenes y requerimientos de negocio.
 
 **✨ Review Insight – Inteligencia de sentimiento al servicio de la hospitalidad moderna**
-
-```
-
-```
