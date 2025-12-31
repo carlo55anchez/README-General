@@ -13,9 +13,9 @@ Review Insight es una solución completa para el análisis de sentimiento de res
 
 ## 🏗️ **Arquitectura del Sistema**
 
-```
 ## ⚙️ Arquitectura del Sistema (Resiliencia Total)
 
+```
 ┌─────────────────┐       (1) HTTP POST      ┌─────────────────┐       (2) Proxy      ┌─────────────────┐
 │                 │ ───────────────────────► │                 │ ──────────────────►  │                 │
 │     Frontend    │    ERR_CONN_REFUSED      │  Node.js (Main) │                      │  FastAPI (ML)   │
