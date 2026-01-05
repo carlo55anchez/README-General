@@ -16,6 +16,8 @@ Review Insight es una solución completa para el análisis de sentimiento de res
 ## ⚙️ Arquitectura del Sistema (Resiliencia Total)
 
 ```
+## ⚙️ Arquitectura del Sistema (Resiliencia Total)
+
 ┌─────────────────┐       (1) HTTP POST      ┌─────────────────┐       (2) Proxy      ┌─────────────────┐
 │                 │ ───────────────────────► │                 │ ──────────────────►  │                 │
 │     Frontend    │    ERR_CONN_REFUSED      │  Node.js (Main) │                      │  FastAPI (ML)   │
@@ -29,9 +31,9 @@ Review Insight es una solución completa para el análisis de sentimiento de res
 ┌─────────────────┐                          ┌──────────────────────────────────┐              │
 │                 │      HTTP POST (5)       │         Capa de Datos            │              │
 │  Java / Spring  │ ───────────────────────► ├──────────────────────────────────┤              │
-│    (Backup)     │ ◄─────────────────────── │ 🔥 Firestore  <──🔄──>  🍃 Mongo  │            │
+│    (Backup)     │ ◄─────────────────────── │ 🔥 Firestore  <──🔄──>  🍃 Mongo  │              │
 └─────────────────┘      (6) JSON Resp       └──────────────────────────────────┘              │
-         │                                                                                     ▼
+         │                                                                                     │
          └─────────────────────────────────────────────────────────────────────────────────────┘
                 (5.1) Comunicación FastAPI
 ```
@@ -152,7 +154,7 @@ node-backend/
 
 ```
 java-backend/
-├── src/main/java/com.reviewinsight.reviewinsight/
+├── src/main/java/com.reviewinsight/
 │   ├── config/        # FirebaseConfig, MongoConfig
 │   ├── controller/    # SentimentController
 │   ├── model/         # Entidades (ReviewEntity, ReviewRecord)
@@ -245,12 +247,6 @@ npm run dev
 | F1-Score  | 0.79         | 0.79         | 0.62       | 0.73   |
 | Accuracy  | -            | -            | -          | 73.88% |
 
-### **Mejoras Clave**
-
-- **Recall de negativos aumentado** de 0.66 a 0.82
-- **Balance perfecto** entre las tres clases
-- **Detección mejorada** de clientes insatisfechos
-
 ---
 
 ## 🔐 **Consideraciones de Seguridad**
@@ -318,70 +314,19 @@ npm run dev
 
 ## 🚢 **Despliegue en Producción**
 
-### **Opción 1: Docker Compose (Todo en uno)**
+El sistema utiliza una infraestructura **Multi-Cloud** distribuida para garantizar la máxima disponibilidad y resiliencia de los servicios.
 
-```yaml
-version: "3.8"
-services:
-  fastapi-ml:
-    build: ./data-science
-    ports:
-      - "8000:8000"
+### **🌍 Servicios y Hosting**
 
-  node-backend:
-    build: ./node-backend
-    ports:
-      - "7860:7860"
-    depends_on:
-      - fastapi-ml
+- **Frontend (React)**: Desplegado en **Vercel** con integración de CI/CD para actualizaciones automáticas.
+- **Backend Primario (Node.js)**: Alojado en **Hugging Face**, funcionando como el punto de entrada principal del sistema.
+- **Motor de ML (FastAPI)**: Desplegado en **Hugging Face**, optimizado para la ejecución del pipeline de Scikit-learn.
+- **Backend de Backup (Java/Spring)**: Implementado en **AWS** mediante una instancia dedicada y gestión de artefactos `.jar` a través de **AWS S3 Buckets**.
 
-  java-backend:
-    build: ./java-backend
-    ports:
-      - "8080:8080"
-    depends_on:
-      - fastapi-ml
+### **💾 Persistencia en la Nube**
 
-  frontend:
-    build: ./frontend
-    ports:
-      - "5173:80"
-    depends_on:
-      - node-backend
-      - java-backend
-```
-
-### **Opción 2: Kubernetes (Escalabilidad)**
-
-- Namespaces separados por microservicio
-- ConfigMaps para variables de entorno
-- Secrets para credenciales sensibles
-- HPA (Horizontal Pod Autoscaler) para carga variable
-
-### **Opción 3: Serverless (AWS/GCP)**
-
-- Frontend en S3/Cloud Storage + CloudFront/CDN
-- Backends en Lambda/Cloud Functions
-- Bases de datos como servicio gestionado
-- FastAPI en contenedor serverless
-
----
-
-## 📊 **Métricas y Monitoreo**
-
-### **Métricas de Negocio**
-
-- **Volumen de análisis**: Número de reseñas procesadas por día
-- **Distribución de sentimientos**: % positivos, negativos, neutros
-- **Tiempo de respuesta**: P95, P99 para endpoints críticos
-- **Disponibilidad**: Uptime de cada componente
-
-### **Métricas Técnicas**
-
-- **Latencia de inferencia**: Tiempo del modelo ML
-- **Tasa de errores**: Por endpoint y tipo de error
-- **Uso de recursos**: CPU, memoria, almacenamiento
-- **Conectividad**: Estado de conexiones a bases de datos
+- **Firebase Firestore**: Base de datos NoSQL principal para sincronización en tiempo real.
+- **MongoDB Atlas**: Persistencia redundante y escalable utilizada para respaldo y consultas analíticas.
 
 ---
 
