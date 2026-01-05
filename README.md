@@ -16,7 +16,6 @@ Review Insight es una solución completa para el análisis de sentimiento de res
 ## ⚙️ Arquitectura del Sistema (Resiliencia Total)
 
 ```
-## ⚙️ Arquitectura del Sistema (Resiliencia Total)
 
 ┌─────────────────┐       (1) HTTP POST      ┌─────────────────┐       (2) Proxy      ┌─────────────────┐
 │                 │ ───────────────────────► │                 │ ──────────────────►  │                 │
