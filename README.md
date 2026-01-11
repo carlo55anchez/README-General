@@ -7,7 +7,9 @@ _(Frontend React + Backends Node/Java + FastAPI ML + Persistencia Dual)_
 
 ## 🎯 **Visión General del Sistema**
 
-Review Insight es una solución completa para el análisis de sentimiento de reseñas hoteleras en español, que combina **inteligencia artificial**, **persistencia redundante** y **arquitectura resiliente** para ofrecer un sistema robusto y escalable.
+Review Insight es una solución completa para el análisis de sentimiento de reseñas hoteleras
+en **español y portugués**, que combina inteligencia artificial, persistencia redundante
+y arquitectura resiliente para ofrecer un sistema robusto y escalable.
 
 ---
 
@@ -63,6 +65,7 @@ Review Insight es una solución completa para el análisis de sentimiento de res
 
 - **Modelo entrenado**: Logistic Regression con TF-IDF
 - **Clasificación ternaria**: Negativo (0), Positivo (1), Neutro (3)
+- **Modelo inicial (Español)**:
 - **Dataset balanceado**: 1,455 muestras por clase (total: 4,365)
 - **Métricas**: Accuracy 73.88%, F1-Score promedio 0.73
 
@@ -227,7 +230,7 @@ npm run dev
 
 ---
 
-## 🧠 **Modelo de Machine Learning**
+## 🧠 Modelo de Machine Learning – Versión Inicial (Español)
 
 ### **Pipeline de Entrenamiento**
 
@@ -245,6 +248,31 @@ npm run dev
 | Recall    | 0.82         | 0.82         | 0.57       | -      |
 | F1-Score  | 0.79         | 0.79         | 0.62       | 0.73   |
 | Accuracy  | -            | -            | -          | 73.88% |
+
+---
+
+## 🌍 Modelo de Machine Learning – Versión Bilingüe (Español / Portugués)
+
+### **Pipeline de Entrenamiento**
+
+1. **Dataset**: Reseñas hoteleras en español (España) y portugués (Brasil)
+2. **Unificación Bilingüe**: Integración de ambos corpus bajo un esquema de etiquetas común
+   - Negativo (0) • Positivo (1) • Neutro (3)
+3. **Balanceo**: Submuestreo estratificado con **1,500 muestras por clase y por país**
+4. **Dataset Final**: **9,000 reseñas balanceadas**
+   - 4,500 España / 4,500 Brasil
+5. **Vectorización**: TF-IDF con unigramas y bigramas (`ngram_range=(1,2)`, `min_df=5`)
+6. **Clasificador**: Logistic Regression multiclase (`solver=lbfgs`)
+7. **Serialización**: Pipeline completo en `.pkl` listo para inferencia directa
+
+### **Métricas de Rendimiento (Test Set Bilingüe)**
+
+| Métrica   | Negativo (0) | Positivo (1) | Neutro (3) | Global |
+| --------- | ------------ | ------------ | ---------- | ------ |
+| Precision | 0.77         | 0.81         | 0.67       | -      |
+| Recall    | 0.81         | 0.81         | 0.63       | -      |
+| F1-Score  | 0.79         | 0.81         | 0.65       | 0.75   |
+| Accuracy  | -            | -            | -          | 75.17% |
 
 ---
 
@@ -318,7 +346,7 @@ El sistema utiliza una infraestructura **Multi-Cloud** distribuida para garantiz
 ### **🌍 Servicios y Hosting**
 
 - **Frontend (React)**: Desplegado en **Vercel** con integración de CI/CD para actualizaciones automáticas.
-- **Backend Primario (Node.js)**: Alojado en **Hugging Face**, funcionando como el punto de entrada principal del sistema.
+- **Backend Primario (Node.js)**: Alojado en **Hugging Face** como endpoint principal de inferencia y **replicado en Google Cloud** como alternativa en evaluación para futuras migraciones o balanceo de tráfico.
 - **Motor de ML (FastAPI)**: Desplegado en **Hugging Face**, optimizado para la ejecución del pipeline de Scikit-learn.
 - **Backend de Backup (Java/Spring)**: Implementado en **AWS** mediante una instancia dedicada y gestión de artefactos `.jar` a través de **AWS S3 Buckets**.
 
